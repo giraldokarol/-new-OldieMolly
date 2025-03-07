@@ -1,0 +1,64 @@
+@use "sass:meta";
+@use "sass:math";
+@use "sass:list";
+
+/*
+    MIXIN FOR PX TO REM
+*/
+@function pxToRem($value){
+    $base_value: 16;
+    $list_values:();
+
+    @if meta.type-of($value) == "list" {
+        @each $val in $value {
+            @if math.unit($val) != "%" and math.floor($val) == $val {
+                $value_rem: math.div($val, $base_value);
+                $list_values: list.append($list_values, $value_rem);
+                
+            } @else {
+                @error "Error: The value #{$val}  is not a valid number.";
+            }
+        }
+        @return $list_values;
+        
+    } @else {
+        @if math.floor($value) == $value and math.unit($value) != "%" {
+            $new_value_rem: math.div($value, $base_value);
+            @return $new_value_rem;
+        }
+    }
+    
+}
+
+@mixin rem($rule, $value){
+    @if $rule != "" {
+        $rem_value: pxToRem($value);
+
+        @if meta.type-of($rem_value) == "list"{
+            $values:();
+            @each $val in $rem_value {
+                $values: list.append($values, #{$val}rem);
+            }
+            #{$rule}: $values;
+
+        }@else{
+            #{$rule}: #{$rem_value}rem;
+        }
+    }
+}
+
+
+/*
+    MIXING FOR ICON
+*/
+
+//Type: Size
+@mixin iconSize($type){
+    display: inline-flex;
+    @include rem(border-radius, 50);
+    @if $type == "large" {
+        //For Large icon
+        @include rem(width, 70);
+        @include rem(height, 70);
+    }
+}

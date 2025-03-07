@@ -1,0 +1,21 @@
+@use "reset.scss";
+@use "config.scss";
+@use "mixins.scss";
+
+//Global styles
+p {
+  @include rem(margin, 8 0);
+}
+//Global Classes for containers
+.om_container_noheader {
+  @include rem(padding, 20);
+}
+
+//Backgrounds
+.om_yllback_def {background: $om_yellow_color;}
+.om_orangback_def {background: $om_orange_color;}
+
+//Icons
+.icon_large {
+  @include iconSize("large");
+}
