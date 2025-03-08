@@ -9,7 +9,6 @@ p {
 
 body{
   font-family: 'Inter', sans-serif;
-  font-variation-settings: "wght" 400;
   color: $om_black_color;
 }
 
@@ -26,6 +25,8 @@ a {
 //Backgrounds
 .om_yllback_def {background: $om_yellow_color;}
 .om_orangback_def {background: $om_orange_color;}
+.om_yllback_light {background: $om_yellow_color5;}
+.om_orangback_light {background: $om_orange_color5;}
 
 
 

@@ -47,6 +47,20 @@
     }
 }
 
+/*
+    DECO
+*/
+@mixin selectedLine($bottom, $width, $height, $color){
+    content: "";
+    position: absolute;
+    @include rem(bottom, $bottom);
+    left: 50%;
+    transform: translateX(-50%);
+    width: $width;
+    @include rem(height, $height);
+    background: $color;
+}
+
 
 /*
     MIXING FOR ICON
