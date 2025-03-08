@@ -6,6 +6,18 @@
 p {
   @include rem(margin, 8 0);
 }
+
+body{
+  font-family: 'Inter', sans-serif;
+  font-variation-settings: "wght" 400;
+  color: $om_black_color;
+}
+
+a {
+  color: $om_black_color;
+  &:hover{ text-decoration: none;}
+}
+
 //Global Classes for containers
 .om_container_noheader {
   @include rem(padding, 20);
