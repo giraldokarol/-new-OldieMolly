@@ -15,7 +15,19 @@ p {
 .om_yllback_def {background: $om_yellow_color;}
 .om_orangback_def {background: $om_orange_color;}
 
+
+
+
+/****************************************************/
 //Icons
+//The way that we are calling all our icons .svg
+[class^="om_icon_"]{
+  @include svgIcon();
+}
+
 .icon_large {
   @include iconSize("large");
 }
+
+//All icons chargement
+.om_icon_bee {&:before{mask-image: url("../images/icons/bee_icon.svg");}}

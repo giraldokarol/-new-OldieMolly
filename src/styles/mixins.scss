@@ -62,3 +62,31 @@
         @include rem(height, 70);
     }
 }
+
+@mixin svgIcon($position: before) {
+    &::#{$position} {
+        content: '';
+        vertical-align: middle;
+        display: inline-block;
+        mask-position: center;
+        mask-repeat: no-repeat;
+        @include rem(mask-size, 16);
+        @include rem(width, 16);
+        @include rem(height, 16);
+        background: #000;
+    }
+}
+
+@mixin svgSize($size, $position:before){
+    &::#{$position}{
+        @include rem(mask-size, $size);
+        @include rem(width, $size);
+        @include rem(height, $size);
+    }
+}
+
+@mixin svgColor($color, $position:before){
+    &:#{$position}{
+        background: $color;
+    }
+}
