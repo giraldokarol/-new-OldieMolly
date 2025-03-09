@@ -8,8 +8,9 @@ p {
 }
 
 body{
-  font-family: 'Inter', sans-serif;
-  color: $om_black_color;
+  font-family: $font_family;
+  color: $body_color;
+  @include rem(font-size, 14);
 }
 
 a {
@@ -17,10 +18,76 @@ a {
   &:hover{ text-decoration: none;}
 }
 
+label {
+  font-weight: 700;
+  @include rem(margin-bottom, 8);
+}
+
+input[type=email], input[type=password], input[type=tel],
+input[type=text], input[type=number] {
+  max-width: 100%;
+  background: #fff;
+  border: #{pxToRem(1)}rem solid $om_black_color2;
+  @include rem(margin, 0 5 5 0);
+  @include rem(min-height, 42);
+  @include rem(border-radius, 8);
+  @include rem(padding, 0 12);
+
+  &:focus-visible{
+    @include focusForm($om_orange_color);
+  }
+}
+
+//Global classes
+.required {
+  color: $om_red_color;
+}
+
+.om_btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: $om_orange_color1;
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+  @include rem(min-height, 42);
+  @include rem(padding, 0 12);
+  @include rem(border-radius, 10);
+
+  &:hover{
+    background: $om_orange_color2;
+  }
+}
+
 //Global Classes for containers
 .om_container_noheader {
   @include rem(padding, 20);
 }
+
+.om_form {
+  &_section {
+    display: flex;
+    flex-direction: column;
+    @include rem(margin-bottom, 8);
+  }
+  
+  &_group {
+    display: flex;
+    align-items: flex-start;
+    @include rem(gap, 8);
+    .om_form_section{
+      flex: 1;
+    }
+  }
+
+  &_buttons {
+    display: flex;
+      @include rem(margin-top, 30);
+  }
+}
+
 
 //Backgrounds
 .om_yllback_def {background: $om_yellow_color;}

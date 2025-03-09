@@ -17,11 +17,11 @@ const {info} = defineProps(["info"]);
 <style scoped lang="scss">
 .om_bigtitle {
     &_image{
-        @include rem(margin-bottom, 30);
+        @include rem(margin-bottom, 16);
         span[class^="om_icon"]{
             align-items: center;
             justify-content: center;
-            @include svgSize(52);
+            @include svgSize(40);
             &.om_yllback_def{
                 @include svgColor($om_orange_color1);
             }
@@ -34,12 +34,20 @@ const {info} = defineProps(["info"]);
     &_text{
         font-weight: 900;
         line-height: 1;
-        @include rem(font-size, 46);
-        @include rem(margin-bottom, 30);
+        @include rem(font-size, 32);
+        @include rem(margin-bottom, 20);
     }
     
     &_description{
         white-space: pre-line;
+    }
+
+    @media screen and (max-width:920px) {
+        &_image {display: none;}
+        &_text {
+            @include rem(font-size, 30);
+            text-align: center;
+        }
     }
 }
 </style>

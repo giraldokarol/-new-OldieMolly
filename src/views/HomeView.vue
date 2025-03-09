@@ -31,10 +31,7 @@ const handleSelectTab = (tab:any) =>{
     selectTab.value = tab.component;
     currentInfo.value = tab; 
     currentImage.value = tab.image;
-    console.log(currentImage)
 }
-
-
 </script>
 
 <template>
@@ -47,7 +44,7 @@ const handleSelectTab = (tab:any) =>{
             </div>
             
             <div class="om_home_banner" :class="{'om_yllback_light' : selectTab == Login, 'om_orangback_light' : selectTab == SignUp }">
-                <img src="/public/site/logo.svg" alt="Oldie Molly Logo" width="468" height="80">
+                <img src="/public/site/logo.svg" alt="Oldie Molly Logo" width="468" height="80" class="om_home_banner_logo">
                 <img :src="currentImage" alt="" class="om_home_banner_img">
             </div>
         </div>
@@ -60,18 +57,18 @@ const handleSelectTab = (tab:any) =>{
     &_container{
         display: flex;
         align-items: center;
-        @include rem(gap, 32);
+        @include rem(gap, 52);
         height: calc(100vh - #{pxToRem(40)}rem);
     }
 
     &_content {
         flex: 1;
-        @include rem(padding, 0 20);
+        @include rem(padding, 0 40);
     }
 
     &_banner{
         height: 100%;
-        width: 55%;
+        width: 50%;
         @include rem(border-radius, 25);
         @include rem(padding, 40);
         overflow: hidden;
@@ -79,11 +76,33 @@ const handleSelectTab = (tab:any) =>{
         flex-direction: column;
         align-items: center;
         justify-content: space-around;
-        @include rem(gap,   40);
+        @include rem(gap, 40);
     }
 
     &_banner_img {
         width: 85%;
+    }
+
+
+    @media screen and (max-width:920px){
+        &_container{
+            flex-direction: column;
+            height: auto;
+        }
+
+        &_banner {
+            order: -1;
+            width: 100%;
+            @include rem(border-radius, 10);
+            @include rem(padding, 16 0);
+        }
+        &_banner_logo {
+            width: 45%;
+            height: auto;
+        }
+        &_banner_img {
+            display: none;
+        }
     }
 }
 </style>

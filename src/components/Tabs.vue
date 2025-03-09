@@ -32,12 +32,11 @@ function selectedItem(value:any, event:Event){
     align-items: center;
     padding: 0;
     border-bottom: #{pxToRem(1)}rem solid $om_black_color2;
-    @include rem(margin, 24 0);
+    @include rem(margin, 24 0 30);
 
     &_item {
         position: relative;
         transition: 0.2s background ease-in;
-        
         @include rem(padding, 12 24);
 
         &.selected{

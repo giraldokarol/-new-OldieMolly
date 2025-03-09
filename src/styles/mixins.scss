@@ -61,6 +61,14 @@
     background: $color;
 }
 
+/*
+    FOCUS VISIBLE
+*/
+@mixin focusForm($color){
+    outline: #{pxToRem(3)}rem solid $color;
+    @include rem(outline-offset, -3);
+}
+
 
 /*
     MIXING FOR ICON
@@ -72,8 +80,8 @@
     @include rem(border-radius, 50);
     @if $type == "large" {
         //For Large icon
-        @include rem(width, 70);
-        @include rem(height, 70);
+        @include rem(width, 50);
+        @include rem(height, 50);
     }
 }
 
