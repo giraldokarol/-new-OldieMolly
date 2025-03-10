@@ -76,6 +76,7 @@ input[type=text], input[type=number] {
   &_group {
     display: flex;
     align-items: flex-start;
+    flex-wrap: wrap;
     @include rem(gap, 8);
     .om_form_section{
       flex: 1;

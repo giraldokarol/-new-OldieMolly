@@ -23,7 +23,15 @@ export const userService = {
         if(!token) {throw new Error("You are not authenticated");}
         const response = await axios.post(`${URL_USER_API}/validate_token.php`, {"jwt" : token});
         return response.data.data;
-    }
+    },
 
     //Signup -> create User
+    async createUser(user:any){
+        try{
+            const response = await axios.post(`${URL_USER_API}/create_user.php`, user);
+            return response.data;
+        }catch(error:any){
+            throw error.message;
+        }
+    }    
 };
