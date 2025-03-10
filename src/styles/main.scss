@@ -101,7 +101,7 @@ input[type=text], input[type=number] {
 /****************************************************/
 //Icons
 //The way that we are calling all our icons .svg
-[class^="om_icon_"]{
+[class*="om_icon_"]{
   @include svgIcon();
 }
 
@@ -110,4 +110,8 @@ input[type=text], input[type=number] {
 }
 
 //All icons chargement
-.om_icon_bee {&:before{mask-image: url("../images/icons/bee_icon.svg");}}
+.om_icon_bee::before {mask-image: url("../images/icons/bee_icon.svg");}
+.om_icon_info::before {mask-image: url("../images/icons/info_icon.svg");}
+.om_icon_error::before {mask-image: url("../images/icons/error_icon.svg");}
+.om_icon_sucess::before {mask-image: url("../images/icons/check_icon.svg");}
+.om_icon_alert::before {mask-image: url("../images/icons/alert_icon.svg");}

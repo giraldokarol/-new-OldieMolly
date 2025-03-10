@@ -1,4 +1,41 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+//Components
+import ReturnMessage from './ReturnMessage.vue';
+//Models and Services
+import { Messages } from '../models/Messages';
+import { userService } from '../services/userService';
+
+//Login
+const router:any = useRouter()
+const email:any = ref("");
+const password:any = ref("");
+
+//Manage Error Messages
+const showError:any = ref(false);
+const message:any = ref({});
+
+function manageErrorMessage(msg:string){
+    showError.value = true;
+    message.value = new Messages("error", msg);
+}
+
+async function logIn(event: Event){
+    event.preventDefault();
+    try{
+        const user = await userService.logIn(email.value, password.value);
+        const userData = await userService.getUserData();
+
+        if(user.status == 200 && userData) {
+            router.push({name:'HomeUser', params: {userName: userData.userName}})
+        }else{            
+            manageErrorMessage("You are using the wrong email or the wrong password");
+        }
+    }catch(error:any){
+        manageErrorMessage("You don't have an account with us");
+    }
+}
 </script>
 
 <template>
@@ -9,7 +46,7 @@
                     Email
                     <span class="required">*</span>
                 </label>
-                <input type="email" name="email" id="email" autocomplete="email">
+                <input v-model="email" type="email" name="email" id="email" autocomplete="email">
             </div>
 
             <div class="om_form_section">
@@ -17,17 +54,18 @@
                     Password
                     <span class="required">*</span>
                 </label>
-                <input type="password" name="password" id="password" autocomplete="password">
+                <input v-model="password" type="password" name="password" id="password" autocomplete="password">
             </div>
 
             <div class="om_form_buttons">
-                <a href="" class="om_btn" aria-labelledby="label-validate" role="button">
+                <a href="" class="om_btn" aria-labelledby="label-validate" role="button" @click="logIn($event)">
                     <span class="om_btn_body" id="label-validate">
                         <span class="om_btn_label">Log in and start saving</span>
                     </span>
                 </a>
             </div>
         </form>
+        <ReturnMessage v-show="showError" :message="message"></ReturnMessage>
     </div>
 </template>
 
