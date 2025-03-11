@@ -33,5 +33,19 @@ export const userService = {
         }catch(error:any){
             throw error.message;
         }
-    }    
+    },
+    
+    //Validate email
+    async validateEmail(email:string){
+        const validate = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return validate.test(email);
+    },
+
+    async validatePassword(password:string){
+        if(password.length >= 6 ){
+            return true;
+        }else {
+            return false;
+        }
+    }
 };

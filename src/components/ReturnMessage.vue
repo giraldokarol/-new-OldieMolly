@@ -1,11 +1,35 @@
 <script lang="ts" setup>
-defineProps(["message"]);
+import { computed } from 'vue';
+import DOMPurify from 'dompurify';
+
+const props = defineProps(["message"]);
+const messageText = computed(() => {
+    if(props.message?.text) {
+        const newText = props.message.text;
+        if(containsHTML(newText)){
+            return sanitizeHTML(newText);
+        }else{
+            return newText;
+        }
+    }
+});
+
+//If contains HTML
+function containsHTML(text: string): boolean {
+    const regex = /<\/?[a-z][\s\S]*>/i;
+    return regex.test(text);
+}
+
+//Sanitize DOM
+function sanitizeHTML(text:string):string {
+    return DOMPurify.sanitize(text);
+}
 </script>
 
 <template>
     <div class="om_bloc_message" :class="{'error': message.type =='error', 'info' : message.type == 'info', 'warning' : message.type == 'warn', 'sucess': message.type == 'sucess'}">
         <span  :class="{'om_icon_info' : message.type == 'info', 'om_icon_error': message.type == 'error', 'om_icon_sucess': message.type =='sucess', 'om_icon_alert' : message.type == 'warn'}" class="om_bloc_message_icon" aria-hidden="true"></span>
-        <p>{{ message.text }}</p>
+        <p v-html="messageText"></p>
     </div>
 </template>
 

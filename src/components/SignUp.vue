@@ -5,11 +5,12 @@ import { Messages } from '../models/Messages';
 import { userService } from '../services/userService';
 import ReturnMessage from './ReturnMessage.vue';
 
-
 //Contns et  refs
 const user:any = ref({userName:"", userLastname: "", email: "", password: "", address: ""});
 const showMessage:any = ref(false);
 const message:any = ref({});
+const errorEmail = ref<boolean>(false);
+const errorPassword = ref<boolean>(false);
 
 
 //Validation if user objet is empty
@@ -23,14 +24,39 @@ function manageMessages(type:string, text:string){
     message.value = new Messages(type, text);
 }
 
+//Reset Inputs
+function resetInput(){
+    user.value.userName = "";
+    user.value.userLastname = "";
+    user.value.email = "";
+    user.value.password = "";
+    user.value.address = "";
+}
+
+async function validateEmail(mail: string){
+    const validationEmail =  await userService.validateEmail(mail);
+    errorEmail.value = !validationEmail ? true : false;
+    return validationEmail;
+}
+
+async function  validatePassword (pass:string) {
+    const validationPassword = await userService.validatePassword(pass);
+    if(!validationPassword) {errorPassword.value =true;}
+    return validationPassword;
+}
 //SignUp function
 async function signUp(event: Event){
     event.preventDefault();
     try{
         if(!hasEmptyValues(user)){
-            const newUser = new User(user.value.userName, user.value.userLastname, user.value.email, user.value.password, user.value.address);
-            await userService.createUser(newUser);
-            manageMessages("sucess", "Congratulations! You account has been created");
+            const newUser = new User(user.value.email, user.value.userName,  user.value.password, user.value.userLastname,user.value.address);
+            const validEmail = await validateEmail(newUser.email);
+            const validPassword = await validatePassword(newUser.password);
+            if (validEmail && validPassword){
+                await userService.createUser(newUser);
+                manageMessages("sucess", `<strong>Congratulations!</strong> You account ${user.value.email} has been created.</br> <a href="/">Go to Login Page</a>`);
+                resetInput();
+            }
         }else{
             manageMessages("error", "All the information are required");
         }
@@ -38,7 +64,6 @@ async function signUp(event: Event){
         manageMessages("error", "Oops! We has a problem with the process. Can you do it again ?");
     }
 }
-
 </script>
 
 <template>
@@ -67,7 +92,8 @@ async function signUp(event: Event){
                     Email 
                     <span class="required">*</span>
                 </label>
-                <input v-model="user.email" type="email" name="email" id="email" autocomplete="email">
+                <input v-model="user.email" type="email" name="email" id="email" autocomplete="email" aria-describedby="email-error">
+                <span v-show="errorEmail" id="email-error" class="om_form_error">Email not valid : exemple@domain.com</span>
             </div>
 
             <div class="om_form_section">
@@ -75,7 +101,8 @@ async function signUp(event: Event){
                     Password 
                     <span class="required">*</span>
                 </label>
-                <input v-model="user.password" type="password" name="password" id="password" autocomplete="password">
+                <input v-model="user.password" type="password" name="password" id="password" autocomplete="password" aria-describedby="password-error">
+                <span v-show="errorPassword" id="password-error" class="om_form_error">Password must have at least 6 characters</span>
             </div>
 
             <div class="om_form_section">

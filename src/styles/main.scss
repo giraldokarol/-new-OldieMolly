@@ -87,6 +87,12 @@ input[type=text], input[type=number] {
     display: flex;
       @include rem(margin-top, 30);
   }
+
+  &_error {
+    font-weight: 600;
+    @include rem(margin, 5 0);
+    color: $om_red_color; 
+  }
 }
 
 
