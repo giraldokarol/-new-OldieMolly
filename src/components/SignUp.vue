@@ -1,27 +1,59 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
+//User Information API
 import { User } from '../models/User';
-import { Messages } from '../models/Messages';
 import { userService } from '../services/userService';
+//Manage bloc messages Info / Error / Warning / Success
+import { Messages } from '../models/Messages';
 import ReturnMessage from './ReturnMessage.vue';
+//Validation Input forms
+import { hasEmptyValues, identifyEmptyValue } from '../services/validationFormService';
+import { ErrorMessageForm } from '../models/ErrorMessageForm';
 
 //Contns et  refs
 const user:any = ref({userName:"", userLastname: "", email: "", password: "", address: ""});
 const showMessage:any = ref(false);
 const message:any = ref({});
-const errorEmail = ref<boolean>(false);
-const errorPassword = ref<boolean>(false);
+const errors = reactive<Record<string, { text: string }>>({});
 
 
-//Validation if user objet is empty
-function hasEmptyValues(obj:any): boolean{
-    return Object.values(obj).some(value => value === "" || value === null || value === undefined);
-}
-
-//Maniputale Messages
+//Maniputale Messages // Creation de bloc de messages --> Error / Info / Warning / Success
 function manageMessages(type:string, text:string){
     showMessage.value = true;
     message.value = new Messages(type, text);
+}
+
+//Validations
+async function validationInfoUser(mail: string, pass: string){
+    //Mail
+    const validationEmail =  await userService.validateEmail(mail);
+    //errors.errorEmail.isShow = !validationEmail ? true : false;
+    if(!validationEmail) {
+        const error = new ErrorMessageForm("email", "Email not valid : exemple@domain.com");
+        errors[error.name] = {text: error.text};
+    }else {
+        delete errors["email"]
+    }
+    //Password
+    const validationPassword = await userService.validatePassword(pass);
+    if(!validationPassword) {
+        const error = new ErrorMessageForm("password", "Password must have at least 6 characters");
+        errors[error.name] = {text: error.text};
+    }else {
+        delete errors["password"]
+    }
+
+    console.log(errors.value)
+    if(validationEmail && validationPassword) { return true;} 
+    else{ return false }  
+}
+
+async function throwErrorsForm(obj:any) {
+    const emptyValues = identifyEmptyValue(obj);
+    emptyValues.forEach(value => {
+        const error = new ErrorMessageForm(value, "Information required");
+        errors[error.name] = {text: error.text};
+    });
 }
 
 //Reset Inputs
@@ -31,33 +63,26 @@ function resetInput(){
     user.value.email = "";
     user.value.password = "";
     user.value.address = "";
+    
+    Object.keys(errors).forEach(key =>{
+        delete errors[key];
+    })
 }
 
-async function validateEmail(mail: string){
-    const validationEmail =  await userService.validateEmail(mail);
-    errorEmail.value = !validationEmail ? true : false;
-    return validationEmail;
-}
-
-async function  validatePassword (pass:string) {
-    const validationPassword = await userService.validatePassword(pass);
-    if(!validationPassword) {errorPassword.value =true;}
-    return validationPassword;
-}
 //SignUp function
 async function signUp(event: Event){
     event.preventDefault();
     try{
-        if(!hasEmptyValues(user)){
+        if(!hasEmptyValues(user.value)){
             const newUser = new User(user.value.email, user.value.userName,  user.value.password, user.value.userLastname,user.value.address);
-            const validEmail = await validateEmail(newUser.email);
-            const validPassword = await validatePassword(newUser.password);
-            if (validEmail && validPassword){
+            const validInfo = await validationInfoUser(newUser.email, newUser.password);
+            if (validInfo){
                 await userService.createUser(newUser);
                 manageMessages("sucess", `<strong>Congratulations!</strong> You account ${user.value.email} has been created.</br> <a href="/">Go to Login Page</a>`);
                 resetInput();
             }
         }else{
+            throwErrorsForm(user.value);
             manageMessages("error", "All the information are required");
         }
     }catch(error: any){
@@ -68,6 +93,7 @@ async function signUp(event: Event){
 
 <template>
     <div class="om_signup_form_content">
+        <ReturnMessage v-show="showMessage" :message="message"></ReturnMessage>
         <form method="post" autocomplete="off" name="signup_form" id="signup_form">
             <div class="om_form_group">
                 <div class="om_form_section">
@@ -75,7 +101,8 @@ async function signUp(event: Event){
                         Name 
                         <span class="required">*</span>
                     </label>
-                    <input v-model="user.userName" type="text" name="userName" id="userName" autocomplete="userName">
+                    <input v-model="user.userName" type="text" name="userName" id="userName" autocomplete="userName" aria-describedby="userName-error">
+                    <span v-if="errors.userName" id="userName-error" class="om_form_error">{{ errors.userName.text }}</span>
                 </div>
 
                 <div class="om_form_section">
@@ -83,7 +110,8 @@ async function signUp(event: Event){
                         Lastname 
                         <span class="required">*</span>
                     </label>
-                    <input v-model="user.userLastname" type="text" name="userLastname" id="userLastname" autocomplete="userLastname">
+                    <input v-model="user.userLastname" type="text" name="userLastname" id="userLastname" autocomplete="userLastname" aria-describedby="userLastname-error">
+                    <span v-if="errors.userLastname" id="userLastname-error" class="om_form_error">{{ errors.userLastname.text }}</span>
                 </div>
             </div>
 
@@ -93,7 +121,7 @@ async function signUp(event: Event){
                     <span class="required">*</span>
                 </label>
                 <input v-model="user.email" type="email" name="email" id="email" autocomplete="email" aria-describedby="email-error">
-                <span v-show="errorEmail" id="email-error" class="om_form_error">Email not valid : exemple@domain.com</span>
+                <span v-if="errors.email" id="email-error" class="om_form_error">{{ errors.email.text }}</span>
             </div>
 
             <div class="om_form_section">
@@ -102,7 +130,7 @@ async function signUp(event: Event){
                     <span class="required">*</span>
                 </label>
                 <input v-model="user.password" type="password" name="password" id="password" autocomplete="password" aria-describedby="password-error">
-                <span v-show="errorPassword" id="password-error" class="om_form_error">Password must have at least 6 characters</span>
+                <span v-if="errors.password" id="password-error" class="om_form_error">{{ errors.password.text }}</span>
             </div>
 
             <div class="om_form_section">
@@ -110,7 +138,8 @@ async function signUp(event: Event){
                     Address 
                     <span class="required">*</span>
                 </label>
-                <input v-model="user.address" type="text" name="address" id="address" autocomplete="address">
+                <input v-model="user.address" type="text" name="address" id="address" autocomplete="address" aria-describedby="address-error">
+                <span v-if="errors.address" id="address-error" class="om_form_error">{{ errors.address.text }}</span>
             </div>
             
             <div class="om_form_buttons">
@@ -121,7 +150,6 @@ async function signUp(event: Event){
                 </a>
             </div>
         </form>
-        <ReturnMessage v-show="showMessage" :message="message"></ReturnMessage>
     </div>
 </template>
 
