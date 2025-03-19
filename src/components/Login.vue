@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, reactive} from 'vue';
 import { useRouter } from 'vue-router';
 //Components
 import ReturnMessage from './ReturnMessage.vue';
 //Models and Services
 import { Messages } from '../models/Messages';
 import { userService } from '../services/userService';
+//Management Errors
+import {hasEmptyValues, identifyEmptyValue} from '../services/validationFormService';
+import { ErrorMessageForm } from '../models/ErrorMessageForm';
 
 //Login
 const router:any = useRouter()
-const email:any = ref("");
-const password:any = ref("");
+const user:any = ref({email:"", password:""})
+const errors = reactive<Record<string, { text: string }>>({});
 
 //Manage Error Messages
 const showError:any = ref(false);
@@ -21,17 +24,30 @@ function manageErrorMessage(msg:string){
     message.value = new Messages("error", msg);
 }
 
+async function throwErrorsForm(obj:any) {
+    const emptyValues = identifyEmptyValue(obj);
+    emptyValues.forEach(value => {
+        const error = new ErrorMessageForm(value, "Information required");
+        errors[error.name] = {text: error.text};
+    });
+}
+
 async function logIn(event: Event){
     event.preventDefault();
     try{
-        const user = await userService.logIn(email.value, password.value);
-        const userData = await userService.getUserData();
-
-        if(user.status == 200 && userData) {
-            router.push({name:'HomeUser', params: {userName: userData.userName}})
-        }else{            
-            manageErrorMessage("You are using the wrong email or the wrong password");
+        if(!hasEmptyValues(user.value)){
+            const data = await userService.logIn(user.value.email, user.value.password);
+            const userData = await userService.getUserData();
+            if(data.status == 200 && userData) {
+                router.push({name:'HomeUser', params: {userName: userData.userName}})
+            }else{            
+                manageErrorMessage("You are using the wrong email or the wrong password");
+            }
+        }else{
+            throwErrorsForm(user.value);
+            manageErrorMessage("All the information are required");
         }
+        
     }catch(error:any){
         manageErrorMessage("You don't have an account with us");
     }
@@ -40,13 +56,15 @@ async function logIn(event: Event){
 
 <template>
     <div class="om_login_form_content">
+        <ReturnMessage v-show="showError" :message="message"></ReturnMessage>
         <form method="post" autocomplete="off" name="login_form" id="login_form">
             <div class="om_form_section">
                 <label for="email">
                     Email
                     <span class="required">*</span>
                 </label>
-                <input v-model="email" type="email" name="email" id="email" autocomplete="email">
+                <input v-model="user.email" type="email" name="email" id="email" autocomplete="email" aria-describedby="email-error-log">
+                <span v-if="errors.email" id="email-error-log" class="om_form_error">{{ errors.email.text }}</span>
             </div>
 
             <div class="om_form_section">
@@ -54,7 +72,8 @@ async function logIn(event: Event){
                     Password
                     <span class="required">*</span>
                 </label>
-                <input v-model="password" type="password" name="password" id="password" autocomplete="password">
+                <input v-model="user.password" type="password" name="password" id="password" autocomplete="password" aria-describedby="password-error-log">
+                <span v-if="errors.password" id="password-error-log" class="om_form_error">{{ errors.password.text }}</span>
             </div>
 
             <div class="om_form_buttons">
@@ -65,7 +84,6 @@ async function logIn(event: Event){
                 </a>
             </div>
         </form>
-        <ReturnMessage v-show="showError" :message="message"></ReturnMessage>
     </div>
 </template>
 

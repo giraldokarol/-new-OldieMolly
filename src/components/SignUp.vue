@@ -43,7 +43,6 @@ async function validationInfoUser(mail: string, pass: string){
         delete errors["password"]
     }
 
-    console.log(errors.value)
     if(validationEmail && validationPassword) { return true;} 
     else{ return false }  
 }
