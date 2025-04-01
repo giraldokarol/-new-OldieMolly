@@ -6,7 +6,7 @@ const {info} = defineProps(["info"]);
     <div class="om_bigtitle_container">
         <div class="om_bigtitle_image">
             <span class="om_icon_bee icon_large" 
-            :class="{'om_yllback_def': info.name == 'Login' , 'om_orangback_def':info.name == 'Sign Up'}"
+            :class="{'om_yllback_def': info.id == 'Login' , 'om_orangback_def':info.id == 'Sign Up'}"
             aria-hidden="true"></span>
         </div>
         <h1 class="om_bigtitle_text">{{info.title}}</h1>

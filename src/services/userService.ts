@@ -22,6 +22,7 @@ export const userService = {
         const token = localStorage.getItem('user_token');
         if(!token) {throw new Error("You are not authenticated");}
         const response = await axios.post(`${URL_USER_API}/validate_token.php`, {"jwt" : token});
+        localStorage.setItem('user_data', response.data.data);
         return response.data.data;
     },
 

@@ -5,7 +5,7 @@ import { User } from '../models/User';
 import { userService } from '../services/userService';
 //Manage bloc messages Info / Error / Warning / Success
 import { Messages } from '../models/Messages';
-import ReturnMessage from './ReturnMessage.vue';
+import ReturnMessage from '../components/ReturnMessage.vue';
 //Validation Input forms
 import { hasEmptyValues, identifyEmptyValue } from '../services/validationFormService';
 import { ErrorMessageForm } from '../models/ErrorMessageForm';

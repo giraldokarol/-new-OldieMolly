@@ -1,26 +1,30 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 
 const props = defineProps(["list"]);
 
-const currentTab:any = ref(props.list.length ? props.list[0].name : "");
-const currentState:any = ref(false);
+const currentTab:any = ref(props.list.length ? props.list[0].text : "");
 
 //Emit to Parent Component
 const emit = defineEmits(["selectedItem"]);
 function selectedItem(value:any, event:Event){
     event.preventDefault();
-    currentTab.value = value.name;
+    currentTab.value = value.text;
     emit("selectedItem", value);
 }
 </script>
 
 <template>
     <ul class="om_tablist">
-        <li v-for="li in list" class="om_tablist_item" :class="{selected: currentTab === li.name}">
-            <a href=""  class="om_tablist_link" role="button" :aria-label="li.name" @click="selectedItem(li, $event)" :aria-current="currentTab == li.name ? true : false">
-                {{li.name}}
-            </a>
+        <li v-for="li in list" class="om_tablist_item" :class="{selected: currentTab === li.text}">
+            <router-link :to="li.link" 
+            class="om_tablist_link" role="button" 
+            :aria-label="li.text"  
+            :aria-current="currentTab == li.text ? true : false"
+            @click="selectedItem(li, $event)">
+                {{li.text   }}
+            </router-link>
         </li>
     </ul>
 </template>

@@ -1,36 +1,37 @@
 <script setup lang="ts">
 //Import Components
-import { ref, shallowRef } from 'vue';
-import Header_Home from '../components/Header_Home.vue';
+import { ref } from 'vue';
+//Models
+import { Tab } from '../models/Tab.ts';
+//Components
+import HeaderHome from '../components/HeaderHome.vue';
 import Tabs from '../components/Tabs.vue';
-import Login from '../components/Login.vue';
-import SignUp from '../components/SignUp.vue';
+
 
 //Tabs config
-const tabs = [
+const tabs = [new Tab("Login", "/"), new Tab("Sign Up", "signup")];
+const infoHeader = [
     {
-        name: "Login",
-        component: Login,
+        id: "Login",
         title: "Welcome back !",
         description: "Join our community of parents giving baby items a second life! \n Buy and sell quality second-hand baby essentials while saving money and reducing waste. \n \n Log in to continue your journey toward smart, sustainable parenting.",
         image: "/site/illustration_login.svg"
     },
     {
-        name: "Sign Up",
-        component: SignUp,
+        id: "Sign Up",
         title: "You are a new member !",
         description: "Join our community of smart parents! Buy & sell quality baby items sustainably. Sign up now!",
         image: "/site/illustration_signup.svg"
     }
-]
-const selectTab:any = shallowRef(Login);
-const currentInfo:any = ref(tabs[0]);
-const currentImage:any = ref(currentInfo.value.image);
+];
+const currentInfo = ref<any>(infoHeader[0]);
 
 const handleSelectTab = (tab:any) =>{ 
-    selectTab.value = tab.component;
-    currentInfo.value = tab; 
-    currentImage.value = tab.image;
+    infoHeader.forEach((el)=>{
+        if(el.id === tab.text){
+            currentInfo.value=el;
+        }
+    })
 }
 </script>
 
@@ -38,18 +39,17 @@ const handleSelectTab = (tab:any) =>{
     <div class="om_container_noheader">
         <div class="om_home_container">
             <div class="om_home_content">
-                <Header_Home :info="currentInfo"/>
-                <Tabs :list="tabs" @selectedItem="handleSelectTab"></Tabs>
-                <component :is="selectTab"></component>
+               <HeaderHome  :info="currentInfo"/>
+               <Tabs :list="tabs" @selectedItem="handleSelectTab"></Tabs>
+               <router-view></router-view>
             </div>
             
-            <div class="om_home_banner" :class="{'om_yllback_light' : selectTab == Login, 'om_orangback_light' : selectTab == SignUp }">
+            <div class="om_home_banner" :class="{'om_yllback_light' : currentInfo.id === 'Login', 'om_orangback_light' : currentInfo.id == 'Sign Up' }">
                 <img src="/public/site/logo.svg" alt="Oldie Molly Logo" width="468" height="80" class="om_home_banner_logo">
-                <img :src="currentImage" alt="" class="om_home_banner_img">
+                <img :src="currentInfo.image" alt="" class="om_home_banner_img">
             </div>
         </div>
-     </div>
-    
+    </div>  
 </template>
 
 <style scoped lang="scss">

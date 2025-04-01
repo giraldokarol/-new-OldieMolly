@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { ref, reactive} from 'vue';
-import { useRouter } from 'vue-router';
 //Components
-import ReturnMessage from './ReturnMessage.vue';
+import ReturnMessage from  '../components/ReturnMessage.vue';
 //Models and Services
 import { Messages } from '../models/Messages';
-import { userService } from '../services/userService';
+//Stores
+import { useAuthStore } from '../stores/authStore';
 //Management Errors
 import {hasEmptyValues, identifyEmptyValue} from '../services/validationFormService';
 import { ErrorMessageForm } from '../models/ErrorMessageForm';
 
 //Login
-const router:any = useRouter()
 const user:any = ref({email:"", password:""})
+const authStore = useAuthStore();
 const errors = reactive<Record<string, { text: string }>>({});
 
 //Manage Error Messages
@@ -36,13 +36,7 @@ async function logIn(event: Event){
     event.preventDefault();
     try{
         if(!hasEmptyValues(user.value)){
-            const data = await userService.logIn(user.value.email, user.value.password);
-            const userData = await userService.getUserData();
-            if(data.status == 200 && userData) {
-                router.push({name:'HomeUser', params: {userName: userData.userName}})
-            }else{            
-                manageErrorMessage("You are using the wrong email or the wrong password");
-            }
+            await authStore.logIn(user.value.email, user.value.password);
         }else{
             throwErrorsForm(user.value);
             manageErrorMessage("All the information are required");
