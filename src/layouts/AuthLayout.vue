@@ -25,7 +25,6 @@ const infoHeader = [
     }
 ];
 const currentInfo = ref<any>(infoHeader[0]);
-
 const handleSelectTab = (tab:any) =>{ 
     infoHeader.forEach((el)=>{
         if(el.id === tab.text){

@@ -7,29 +7,34 @@ import { MenuElement } from '../models/MenuElement';
 
 const isAuth = useAuthStore();
 const menuPrincipal = ref<MenuElement | null>(null)
-const isUserFetched = ref(false);
 
-console.log("AuthLayout montado");
 function updatedMenu() {
+  menuPrincipal.value = new MenuElement(
+    "Menu Principal",
+    [
+      {text: "All Products", title:"Show all Products", route: {name: "HomeUser", param:"/"}},
+      {text: "My Orders", title:"Show all my orders", route: {name: "Orders", param:"orders"}}
+    ],
+    [],
+    true
+  )
 }
 
 onMounted(() =>{
   if (isAuth.isAuthenticated) {
     isAuth.fetchUserData().then(() => {
-      isUserFetched.value = true;
       updatedMenu();
     }).catch(error => {
       console.error("Error fetching user data:", error);
     });
   }
-  console.log("Hola soy Users.vue")
 });
 </script>
 
 <template>
   <header role="banner">
     <div class="om_menu">
-      <div class="om_menu_container" v-if="isAuth.isAuthenticated && isUserFetched">
+      <div class="om_menu_container" v-if="isAuth.isAuthenticated">
         <Menu  v-if="menuPrincipal" :items="menuPrincipal"></Menu>
         <div class="om_authentification">
           <a @click="isAuth.logOut">Cerrar Sesion</a>
@@ -38,7 +43,8 @@ onMounted(() =>{
     </div>
   </header>
 
-    <h1>Hola Mundo</h1>
+  <router-view></router-view>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+</style>
