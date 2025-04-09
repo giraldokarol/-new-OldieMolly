@@ -27,13 +27,14 @@ export const useAuthStore = defineStore('auth', () => {
         try{
             const userData = await userService.getUserData();
             user.value = userData;
-            localStorage.setItem('user_data', user.value);
+            localStorage.setItem('user_data', JSON.stringify(user.value));
         }catch(error){
             console.error("Error to get user data")
         }
     }
 
-    async function logOut(){
+    async function logOut(event: Event){
+        event.preventDefault();
         token.value = "";
         user.value = null;
         localStorage.removeItem('user_token');

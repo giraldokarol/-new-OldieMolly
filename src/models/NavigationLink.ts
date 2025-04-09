@@ -5,6 +5,6 @@ export class NavigationLink {
     constructor(text: string, title:string, route:{name:string, param:string}){
         this.text = text;
         this.title = title;
-        this.route = {name: route.name, param:route.param};
+        this.route = {name: route.name, param: route.param};
     }
 }

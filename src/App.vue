@@ -1,7 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 
 <template>
-  <main role="main" class="om_content">
-      <RouterView />
-  </main>
+  <RouterView />
 </template>
