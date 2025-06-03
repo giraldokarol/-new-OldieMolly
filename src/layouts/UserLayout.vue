@@ -5,8 +5,10 @@ import { useAuthStore } from '../stores/authStore';
 import Menu from '../components/Menu.vue';
 //Models
 import { MenuElement } from '../models/MenuElement';
+import { responsive } from '../mixins/responsive';
 
 const isAuth = useAuthStore();
+const isMobile = responsive();
 const menuPrincipal = ref<MenuElement | null>(null)
 
 menuPrincipal.value = new MenuElement(
@@ -28,7 +30,10 @@ menuPrincipal.value = new MenuElement(
       <div class="om_menu_container">
         <Menu  v-if="menuPrincipal" :items="menuPrincipal"></Menu>
         <div class="om_authentification">
-          <a href="" class="om_btn" role="button" @click="isAuth.logOut($event)">Sign Out</a>
+          <a href="" class="om_btn om_authentification_btn" role="button" @click="isAuth.logOut($event)">
+            <span aria-hidden="true" class="om_icon_exit"></span>
+            <p :class="{'sr_only': isMobile}">Sign Out</p>
+          </a>
         </div>
       </div>
     </div>
@@ -64,6 +69,15 @@ menuPrincipal.value = new MenuElement(
   }
   .om_authentification {
     @include rem(margin-left, 24);
+    &_btn {
+      @include rem(gap, 8);
+      p { margin: 0}
+      span[class*="om_icon"]{
+        @include svgSize(24);
+        @include svgColor(#fff);
+      }
+      
+    }
   }
 
   @media (max-width: $tablet_dimension) {
