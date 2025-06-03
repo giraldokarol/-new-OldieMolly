@@ -100,6 +100,12 @@
     }
 }
 
+@mixin svgImage($image, $position:before) {
+    &::#{$position} {
+        mask-image: url("../images/icons/#{$image}.svg");
+    }
+}
+
 @mixin svgSize($size, $position:before){
     &::#{$position}{
         @include rem(mask-size, $size);

@@ -12,6 +12,7 @@ Types : horizontal (class: om_menu_hz) & vertical(class: om_menu_vrt)
 Justify : center(class:om_menu_nav_center) / right(class:om_menu_nav_right)
 */
 function menuType(rule:string){ return rule === 'horizontal'? 'om_menu_hz' : 'om_menu_vrt'}
+
 function menuJustify(rule:string){
     if(rule === 'center'){
         return 'om_menu_nav_center';
@@ -46,13 +47,14 @@ function openMenu(){
     </div>
 
     <nav  role="navigation" :aria-label="props.items.aria" class="om_menu_nav" :class="menuType(props.items.styles.type), menuJustify(props.items.styles.justify)">
-        <button v-if="props.items.hasBurger && isMobile" type="button" aria-expanded="false" class="om_burgerbutton" :class="{'open': isOpen}" @click="openMenu()">
+        <button v-if="props.items.hasBurger && isMobile" type="button" :aria-expanded=isOpen  class="om_burgerbutton" :class="{'open': isOpen}" @click="openMenu()">
             <span class="om_burgerbutton_icon" aria-hidden="true">
                 <span class="om_burgerbutton_lines"></span>
             </span>
-            <span class="om_burgerbutton_text">Menu</span>
+            <span class="om_burgerbutton_text sr_only">Menu</span>
         </button>
-        <ul :class="props.items.styles.type === 'horizontal' ? 'om_menu_hz': 'om_menu_vrt'" v-if="!isMobile">
+
+        <ul :class="props.items.styles.type === 'horizontal' ? 'om_menu_hz': 'om_menu_vrt'">
             <li v-for="item in props.items.links" class="om_menu_item">
                 <router-link :to="{name:item.route.name}">{{ item.text }}</router-link>
             </li>
@@ -144,6 +146,64 @@ function openMenu(){
 
         &_logo {
             @include rem(margin-left, calc($burger_size + 16));
+            img {
+                @include rem(width, 200);
+                @include rem(margin-top, 8);
+            }
+        }
+
+        &_nav {
+            position: fixed;
+            @include rem(top, 85);
+            left: -100%;
+            background: #FFF;
+            height: calc(100vh - 85px);
+            width: 100%;
+            justify-content: flex-start;
+            align-items: flex-start;
+            transition: left 0.3s ease-in;
+
+            .menumobile & {
+                left: 0;
+            }
+
+            > ul {
+                flex-direction: column;
+                height: auto;
+                width: 100%;
+                @include rem(margin-top, 24);
+                > .om_menu_item {
+                    width: 100%;
+                    margin: 0;
+                    border-bottom: #{pxToRem(1)}rem solid $om_black_color3;
+                    @include rem(min-height, 62);
+
+                    a {
+                        width: 100%;
+                        @include rem(padding, 0 24);
+                        @include svgIcon;
+                        @include svgImage(chevron_right);
+                        @include svgColor($body_color);
+                        &:before {
+                            position: absolute;
+                            @include rem(right, 24);
+                        }
+
+                        &.router-link-exact-active::after {
+                            @include rem(bottom, -24);
+                            @include rem(left, 0);
+                            width: 100%;
+                        }
+                    }
+
+                    &:hover {
+                        border-color: $om_orange_color;
+                        a {
+                            font-weight: 600;
+                        }
+                    }
+                }
+            }
         }
 
         .om_burgerbutton {
@@ -169,7 +229,7 @@ function openMenu(){
                 @include rem(width, $burger_size);
                 @include rem(height, 3);
                 @include rem(border-radius, 5);
-                background: $body_color;
+                background: $burger_color;
                 transition: all .3s ease-in-out;
             }
 

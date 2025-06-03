@@ -43,6 +43,13 @@ input[type=text], input[type=number] {
   color: $om_red_color;
 }
 
+.sr_only {
+  position: absolute;
+  overflow: hidden;
+  opacity: 0;
+  top: -10000px;
+}
+
 .om_btn {
   display: inline-flex;
   align-items: center;
@@ -103,8 +110,6 @@ input[type=text], input[type=number] {
 .om_orangback_light {background: $om_orange_color5;}
 
 
-
-
 /****************************************************/
 //Icons
 //The way that we are calling all our icons .svg
@@ -122,3 +127,4 @@ input[type=text], input[type=number] {
 .om_icon_error::before {mask-image: url("../images/icons/error_icon.svg");}
 .om_icon_sucess::before {mask-image: url("../images/icons/check_icon.svg");}
 .om_icon_alert::before {mask-image: url("../images/icons/alert_icon.svg");}
+.om_icon_chevron_right::before {mask-image: url("../images/icons/chevron_right.svg");}

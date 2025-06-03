@@ -65,4 +65,10 @@ menuPrincipal.value = new MenuElement(
   .om_authentification {
     @include rem(margin-left, 24);
   }
+
+  @media (max-width: $tablet_dimension) {
+    .om_authentification {
+      margin-left: auto;
+    }
+  }
 </style>
