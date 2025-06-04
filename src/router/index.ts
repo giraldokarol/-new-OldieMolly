@@ -35,7 +35,7 @@ const router:any = createRouter({
     ],
 });
 
-router.beforeEach((to:RouteLocationNormalized, from:RouteLocationNormalized, next:NavigationGuardNext) => {
+router.beforeEach(async (to:RouteLocationNormalized, from:RouteLocationNormalized, next:NavigationGuardNext) => {
     if(!getActivePinia ){
         next();
         return;
@@ -47,6 +47,9 @@ router.beforeEach((to:RouteLocationNormalized, from:RouteLocationNormalized, nex
         next({name: "Login"});
         return;
     }else {
+        if (auth.token && !auth.user) {
+            await auth.fetchUserData();
+        }
         next();
     }
 });
