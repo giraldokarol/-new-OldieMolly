@@ -102,6 +102,48 @@ input[type=text], input[type=number] {
   }
 }
 
+//Search
+.om_search_form {
+  display: flex;
+  align-items: center;
+  position: relative;
+  
+  .om_searh_input {
+      margin: 0;
+      border: 0;
+      color: $body_color;
+      background: $om_black_color5;
+      @include rem(min-height, 58);
+      @include rem(padding-right, 60);
+      &::placeholder {
+        color: $body_color;
+      }
+  }
+
+  .om_search_btn {
+    cursor: pointer;
+    background: $om_orange_color1;
+    border: 0;
+    position: absolute;
+    @include rem(right, 12);
+    @include rem(width, 36);
+    @include rem(height, 36);
+    @include rem(border-radius, 50);
+
+    span[class*="om_icon"]{
+      @include svgSize(13);
+      @include svgColor(#fff);
+    }
+
+    &:hover {
+      background: $om_orange_color2;
+    }
+  }
+
+  @media screen and (max-width: $mobile_dimension) {
+    .om_searh_input {width: 100%;}
+  }
+}
 
 //Backgrounds
 .om_yllback_def {background: $om_yellow_color;}
@@ -128,6 +170,7 @@ input[type=text], input[type=number] {
 .om_icon_sucess::before {mask-image: url("../images/icons/check_icon.svg");}
 .om_icon_alert::before {mask-image: url("../images/icons/alert_icon.svg");}
 .om_icon_chevron_right::before {mask-image: url("../images/icons/chevron_right.svg");}
+.om_icon_chevron_left::before {mask-image: url("../images/icons/chevron_left.svg");}
 .om_icon_exit::before {mask-image: url("../images/icons/signout.svg");}
 .om_icon_search::before {mask-image: url("../images/icons/search_icon.svg");}
 .om_icon_all::before {mask-image: url("../images/icons/all_icon.svg");}

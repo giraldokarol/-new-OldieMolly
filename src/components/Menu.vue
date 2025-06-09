@@ -4,7 +4,7 @@ import { responsive } from '../mixins/responsive';
 import { ref } from 'vue';
 
 const props = defineProps(["items"]);
-const isMobile = responsive();
+const {isMobile} = responsive();
 const isOpen = ref(false);
 
 /*

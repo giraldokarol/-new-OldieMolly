@@ -8,7 +8,7 @@ import { MenuElement } from '../models/MenuElement';
 import { responsive } from '../mixins/responsive';
 
 const isAuth = useAuthStore();
-const isMobile = responsive();
+const {isMobile} = responsive();
 const menuPrincipal = ref<MenuElement | null>(null)
 
 menuPrincipal.value = new MenuElement(

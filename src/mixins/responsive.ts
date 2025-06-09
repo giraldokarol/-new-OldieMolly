@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 export const responsive = () => {
     const windowWidth = ref(window.innerWidth);
     const isMobile = computed(() => windowWidth.value < 920);
+    const isMobileMini = computed(() => windowWidth.value < 765);
     const handleResize = () =>{ windowWidth.value = window.innerWidth; }
 
     //Events
@@ -13,5 +14,5 @@ export const responsive = () => {
         window.removeEventListener('resize', handleResize);
     });
 
-    return isMobile;
+    return {isMobile, isMobileMini};
 };
