@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { useAuthStore } from '../stores/authStore';
-import Tag from '../components/Tag.vue';
 import { responsive } from '../mixins/responsive';
 import { ref } from 'vue';
+//Components
+import Tag from '../components/Tag.vue';
+import Card from '../components/Card.vue';
 
 const {isMobileMini} = responsive();
 const isAuth = useAuthStore();
@@ -65,6 +67,13 @@ function moveRight(){
             <button aria-label="Move right" :disabled="atEnd" @click="moveRight" class="om_home_filters_controls_btn" :class="{'disabled':atEnd}">
                 <span aria-hidden="true" class="om_icon_chevron_right"></span>
             </button>
+        </div>
+    </div>
+
+    <div class="om_home_card_wrapper">
+        <div class="om_home_card_container" aria-label="Product Cards" role="region">
+            <Card></Card>
+            <Card></Card>
         </div>
     </div>
 </template>
@@ -143,6 +152,13 @@ function moveRight(){
                     outline: #{pxToRem(2)}rem dashed $om_orange_color1;
                 }
             }
+        }
+
+        &_card_container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(#{pxToRem(407)}rem, 1fr));
+            @include rem(gap, 14);
+            @include rem(margin-top, 20);
         }
 
         @media screen and (max-width: $mobile_dimension) {

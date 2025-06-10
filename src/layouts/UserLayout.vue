@@ -39,7 +39,7 @@ menuPrincipal.value = new MenuElement(
     </div>
   </header>
 
-  <main class="om_main">
+  <main class="om_main" role="main">
     <router-view></router-view>
   </main>
   
