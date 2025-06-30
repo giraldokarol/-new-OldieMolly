@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import { useAuthStore } from '../stores/authStore';
 import { responsive } from '../mixins/responsive';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 //Components
 import Tag from '../components/Tag.vue';
 import Card from '../components/Card.vue';
+//Services
+import { categoryService } from '../services/categoryService';
+import type { Category } from '../models/Category';
 
-const {isMobileMini} = responsive();
+const {isMobileLarge} = responsive();
 const isAuth = useAuthStore();
 //Scroll Filters
 const scrollContainer = ref<HTMLDivElement | null>(null);; // Container a scroller
@@ -31,6 +34,28 @@ function moveRight(){
         setTimeout(updateScroll, 300);
     }
 }
+
+//Category Handling
+const categories = ref<Category[]>([]);
+
+function asignIcon(type:string){
+    if(type.includes('Mobility')){
+        return 'om_icon_stroller';
+    } else if(type.includes('Room')){
+        return 'om_icon_crib';
+    } else if(type.includes('Toys')){
+        return 'om_icon_cartoy'
+    } else if(type.includes('Clothes')){
+        return 'om_icon_clothes';
+    } else if(type.includes('Kitchen')){
+        return 'om_icon_blender';
+    }
+}
+
+onMounted(async() => {
+    categories.value = await categoryService.getCategories();
+});
+
 </script>
 
 <template>
@@ -54,13 +79,15 @@ function moveRight(){
     </div>
     <div class="om_home_filters_wrapper">
         <div class="om_home_filters_container" aria-label="Product Categories" tabindex="0" role="region" ref="scrollContainer">
-            <Tag icon="om_icon_all" text="All our products"></Tag>
-            <Tag icon="om_icon_stroller" text="Mobility Products"></Tag>
-            <Tag icon="om_icon_crib" text="Room Products"></Tag>
-            <Tag icon="om_icon_cartoy" text="Toys"></Tag>
-            <Tag icon="om_icon_clothes" text="Clothes"></Tag>
+            <ul>
+                <li><Tag icon="om_icon_all" text="All our products"></Tag></li>
+                <li v-for="cat in categories">
+                    <Tag :text="cat.nameCategory" :icon="asignIcon(cat.nameCategory)"></Tag>
+                </li>
+            </ul>
+            
         </div>
-        <div class="om_home_filters_controls" v-if="isMobileMini">
+        <div class="om_home_filters_controls" v-if="isMobileLarge">
             <button aria-label="Move left" :disabled="atStart" @click="moveLeft" class="om_home_filters_controls_btn" :class="{'disabled':atStart}">
                 <span aria-hidden="true" class="om_icon_chevron_left"></span>
             </button>
@@ -103,7 +130,7 @@ function moveRight(){
         }
 
         //Filters
-        &_filters_container {
+        &_filters_container ul{
             display: flex;
             align-items: center;
             @include rem(gap, 8);
