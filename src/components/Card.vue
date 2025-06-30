@@ -14,7 +14,7 @@ const props = withDefaults(
             quantity: 0,
             type: 'Second Hand',
             description: 'Short description of ht product un max 70 characters',
-            image1: "",
+            image: "",
             image2: "",
             image3: "",
             idUser: 0,
@@ -26,9 +26,9 @@ const props = withDefaults(
 
 <template>
     <article class="om_card">
-        <div class="om_card_image" aria-label="Product's photo">
-            <img v-if="props.product.image1 !== ''" :src="props.product.image1" :alt="props.product.prodName">
-            <span v-else="props.product.image1 == ''" aria-hidden="true" class="om_icon_all"></span>
+        <div class="om_card_image" aria-label="Product's photo" :class="{'om_image': !!props.product.image?.trim()}">
+            <img v-if="props.product.image !== ''" :src="props.product.image" :alt="props.product.prodName">
+            <span v-else="props.product.image == ''" aria-hidden="true" class="om_icon_all"></span>
             <Favorite></Favorite>
         </div>
         <div class="om_card_header">
@@ -56,10 +56,21 @@ const props = withDefaults(
 
     &_image {
         position: relative;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
         background: $om_black_color5;
         @include rem(border-radius, 8);
         @include rem(min-width, 407);
         @include rem(height, 233);
+        
+        &.om_image {
+            background: #FFF;
+        }
+
+        img {
+            width: auto;
+        }
 
         .om_favorite_btn {
             position: absolute;

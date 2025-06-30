@@ -8,6 +8,8 @@ import Card from '../components/Card.vue';
 //Services
 import { categoryService } from '../services/categoryService';
 import type { Category } from '../models/Category';
+import { productService } from '../services/productService';
+import type { Product } from '../models/Product';
 
 const {isMobileLarge} = responsive();
 const isAuth = useAuthStore();
@@ -52,8 +54,14 @@ function asignIcon(type:string){
     }
 }
 
+//Product Handling
+const products = ref<Product[]>([]);
+
 onMounted(async() => {
+    //Get Categories
     categories.value = await categoryService.getCategories();
+    //Get Porducts
+    products.value = await productService.getProducts();
 });
 
 </script>
@@ -99,8 +107,7 @@ onMounted(async() => {
 
     <div class="om_home_card_wrapper">
         <div class="om_home_card_container" aria-label="Product Cards" role="region">
-            <Card></Card>
-            <Card></Card>
+            <Card v-for="p in products" :product="p"></Card>
         </div>
     </div>
 </template>

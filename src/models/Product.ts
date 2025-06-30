@@ -4,7 +4,7 @@ export class Product {
     quantity?:number;
     type?:string;
     description?:string;
-    image1?:string;
+    image?:string;
     image2?:string;
     image3?:string;
     idUser?:number;
