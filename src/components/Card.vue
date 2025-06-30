@@ -58,18 +58,17 @@ const props = withDefaults(
         position: relative;
         overflow: hidden;
         display: flex;
-        justify-content: center;
         background: $om_black_color5;
         @include rem(border-radius, 8);
         @include rem(min-width, 407);
         @include rem(height, 233);
         
-        &.om_image {
-            background: #FFF;
-        }
 
         img {
-            width: auto;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
         }
 
         .om_favorite_btn {

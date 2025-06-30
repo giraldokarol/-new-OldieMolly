@@ -192,7 +192,7 @@ onMounted(async() => {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(#{pxToRem(407)}rem, 1fr));
             @include rem(gap, 14);
-            @include rem(margin-top, 20);
+            @include rem(margin, 20 0);
         }
 
         @media screen and (max-width: $mobile_dimension) {
