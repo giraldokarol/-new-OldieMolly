@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { useAuthStore } from '../stores/authStore';
 import { responsive } from '../mixins/responsive';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 //Components
 import Tag from '../components/Tag.vue';
 import Card from '../components/Card.vue';
+import Pages from '../components/Pages.vue';
 //Services
 import { categoryService } from '../services/categoryService';
 import type { Category } from '../models/Category';
@@ -64,6 +65,17 @@ onMounted(async() => {
     products.value = await productService.getProducts();
 });
 
+//Pagination Handling
+const itemsPerPage:number = 12;
+const currentPage = ref<number>(1);
+const paginatedItems = computed(() => {
+    const start = (currentPage.value -1) * itemsPerPage;
+    return products.value.slice(start, start + itemsPerPage);
+});
+
+function handlePageChange(page: number) {
+  currentPage.value = page;
+}
 </script>
 
 <template>
@@ -93,7 +105,6 @@ onMounted(async() => {
                     <Tag :text="cat.nameCategory" :icon="asignIcon(cat.nameCategory)"></Tag>
                 </li>
             </ul>
-            
         </div>
         <div class="om_home_filters_controls" v-if="isMobileLarge">
             <button aria-label="Move left" :disabled="atStart" @click="moveLeft" class="om_home_filters_controls_btn" :class="{'disabled':atStart}">
@@ -107,7 +118,10 @@ onMounted(async() => {
 
     <div class="om_home_card_wrapper">
         <div class="om_home_card_container" aria-label="Product Cards" role="region">
-            <Card v-for="p in products" :product="p"></Card>
+            <Card v-for="p in paginatedItems" :product="p"></Card>
+        </div>
+        <div class="om_home_card_pagination">
+            <Pages :totalitems="products.length" :itemPerPage="itemsPerPage" :currentPage="currentPage" @page_changed="handlePageChange"></Pages>
         </div>
     </div>
 </template>

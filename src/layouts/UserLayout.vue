@@ -52,6 +52,7 @@ menuPrincipal.value = new MenuElement(
     left: 0;
     right: 0;
     max-width: 100vw;
+    z-index: 999;
     background: $header_background;
     border-bottom: #{pxToRem(1)}rem solid rgba($color: $om_black_color, $alpha: 0.08);
     @include rem(height, $header_height);
