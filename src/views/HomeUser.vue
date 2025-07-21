@@ -76,6 +76,9 @@ const paginatedItems = computed(() => {
 function handlePageChange(page: number) {
   currentPage.value = page;
 }
+
+//Search Handling
+
 </script>
 
 <template>
@@ -128,15 +131,15 @@ function handlePageChange(page: number) {
 
 <style scoped lang="scss">
     .om_home {
-        //Title and Welcome text
-        &_title_container {
+        //Welcome text
+       &_title_container {
             display: flex;
             align-items: flex-end;
             justify-content: space-between;
             flex-wrap: wrap;
-            @include rem(margin, 40 0 30 0) ;
+            @include rem(margin, 40 0 30 0);
         }
-
+        
         &_title {
             @include rem(max-width, 639);
             h1 {

@@ -42,6 +42,10 @@ menuPrincipal.value = new MenuElement(
   <main class="om_main" role="main">
     <router-view></router-view>
   </main>
+
+  <footer class="om_footer" role="footer">
+    <img src="../../public/site/logo_neg.svg" alt="Oldie Molly" class="om_footer_logo">
+  </footer>
   
 </template>
 
@@ -81,9 +85,27 @@ menuPrincipal.value = new MenuElement(
     }
   }
 
+  .om_footer{
+    display: flex;
+    align-items: center;
+    background: $om_orange_color;
+    @include rem(max-width, 1520);
+    @include rem(padding, 16 24);
+    margin: 0 auto;
+
+    &_logo {
+      @include rem(width, 200)
+    }
+
+  }
+
   @media (max-width: $tablet_dimension) {
     .om_authentification {
       margin-left: auto;
+    }
+
+    .om_footer {
+      justify-content: center;
     }
   }
 </style>
